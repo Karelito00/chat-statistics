@@ -1,5 +1,7 @@
 import pandas as pd
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import json
+from datetime import datetime
 
 class ParseConversation:
 
@@ -76,6 +78,28 @@ class WhatsApp(ParseConversation):
 
         return self.convert_to_df(data)
 
+class Telegram(ParseConversation):
+    def __init__(self, filename):
+        ParseConversation.__init__(self, filename)
+
+    def prepare_data(self):
+        data = []
+        f = open(self.filename, encoding="utf-8")
+        json_file = json.load(f)
+        messages = json_file['messages']
+        for _message in messages:
+            if(_message['type'] == 'service'):
+                continue
+            author = _message['from']
+            message = _message['text']
+            date, time = _message['date'].split('T')
+            data.append([date, time, author, str(message)])
+
+        f.close()
+
+        return self.convert_to_df(data)
+
+
 class PrepareData:
     def __init__(self, filename, chat_type):
         self.chat_type = chat_type
@@ -84,5 +108,7 @@ class PrepareData:
     def run(self):
         if self.chat_type == 'WhatsApp':
             return WhatsApp(self.filename).prepare_data()
+        elif self.chat_type == 'Telegram':
+            return Telegram(self.filename).prepare_data()
 
 
