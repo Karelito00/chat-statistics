@@ -1,13 +1,13 @@
 import fpdf
 
-SEPARATOR = '----------------------------------------------------------------------------------------------------------------------------------'
+SEPARATOR = '---------------------------------------------------------------------------'
 
 class PDF:
 
     def __init__(self):
         self.pdf = fpdf.FPDF(format='letter')
         self.pdf.add_page()
-        self.pdf.set_font("Arial", size=12)
+        self.pdf.set_font("Courier", size=12)
 
     def write_text(self, text):
         self.pdf.write(5, text)

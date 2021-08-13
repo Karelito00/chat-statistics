@@ -3,11 +3,26 @@ import numpy as np
 import collections
 from datetime import datetime
 from pdf import PDF
+from prettytable import PrettyTable
 
 class Statistics:
 
     def __init__(self, data):
         self.data = data
+
+    def build_pretty_table(self, columns, data):
+        t = PrettyTable(columns)
+        for index, row in data.iterrows():
+            t_row = [index]
+
+            for column in columns[1:]:
+                t_row.append(row[column])
+
+            t.add_row(t_row)
+            if(index == 5):
+                break
+
+        return t
 
     def getAuthorsActivity(self):
         authorsActivity = collections.Counter(self.data['Author'])
@@ -40,7 +55,9 @@ class Statistics:
         pdf.write_text(name)
         pdf.write_image('1.png')
         pdf.write_endlines(2)
-        pdf.write_text(str(new_data[[column]]))
+        new_data = new_data[[column]]
+        t = self.build_pretty_table(['Author', column], new_data)
+        pdf.write_text(t.get_string())
         pdf.write_separator()
 
     def get_hour(self, time):
@@ -88,9 +105,12 @@ class Statistics:
             total += messages
 
         pdf.write_text("Authors activity")
+        t = PrettyTable(['Author', 'Messages', 'Percent'])
         for messages, author in authorsActivity:
-            pdf.write_text("Author: " + author + ", messages: " + str(messages) + ", percent: " + str(self.percent(messages, total)) + "%")
+            t.add_row([author, messages, str(self.percent(messages, total)) + "%"])
 
+        t.add_row(["Total", total, "100%"])
+        pdf.write_text(t.get_string())
         pdf.write_separator()
 
 class Summary(Statistics):
