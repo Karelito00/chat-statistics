@@ -4,6 +4,7 @@ import collections
 from datetime import datetime
 from pdf import PDF
 from prettytable import PrettyTable
+import os
 
 class Statistics:
 
@@ -51,9 +52,10 @@ class Statistics:
 
         name = "Top " + str(len(index)) + " chat authors more " + column
         plt.title(name, fontsize=20)
-        plt.savefig('1.png')
+        plt.savefig(name + '.png')
         pdf.write_text(name)
-        pdf.write_image('1.png')
+        pdf.write_image(name + '.png')
+        os.remove(name + '.png')
         pdf.write_endlines(2)
         new_data = new_data[[column]]
         t = self.build_pretty_table(['Author', column], new_data)
@@ -89,10 +91,11 @@ class Statistics:
 
         name = "Activity according to time"
         plt.ylabel(name)
-        plt.savefig("1.png")
+        plt.savefig(name + ".png")
         pdf.write_text(name)
         pdf.write_endlines(2)
-        pdf.write_image('1.png')
+        pdf.write_image(name + '.png', w=200)
+        os.remove(name + '.png')
         pdf.write_separator()
 
     def percent(self, p, t):
