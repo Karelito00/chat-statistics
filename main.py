@@ -1,7 +1,7 @@
 from parse import PrepareData
 from statistics import Summary
 
-Platforms = ['Whatsapp', 'Telegram']
+Platforms = ['WhatsApp', 'Telegram']
 def show_platforms():
     for i in range(len(Platforms)):
         print("[" + str(i + 1) + "] " + Platforms[i])
