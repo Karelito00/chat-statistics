@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import collections
 from datetime import datetime
+from pdf import PDF
 
 class Statistics:
 
@@ -14,7 +15,7 @@ class Statistics:
         authorsActivity.sort()
         return authorsActivity[::-1]
 
-    def draw_pie_sentiment(self, column="Positive", ALPHA=0.6):
+    def draw_pie_sentiment(self, pdf, column="Positive", ALPHA=0.6):
         data = self.data
         data[column] = [1 if x > ALPHA else 0 for x in data[column]]
         data[column] = data[column].astype(int)
@@ -35,10 +36,12 @@ class Statistics:
 
         name = "Top " + str(len(index)) + " chat authors more " + column
         plt.title(name, fontsize=20)
-        plt.savefig(name + '.pdf')
-        print(new_data[[column]])
-        print("More Info: " + name + '.pdf')
-        print()
+        plt.savefig('1.png')
+        pdf.write_text(name)
+        pdf.write_image('1.png')
+        pdf.write_endlines(2)
+        pdf.write_text(str(new_data[[column]]))
+        pdf.write_separator()
 
     def get_hour(self, time):
         num = 0
@@ -53,7 +56,7 @@ class Statistics:
             num = 0
         return num
 
-    def show_activity_by_hour(self):
+    def show_activity_by_hour(self, pdf):
         data = self.data
         authorsActivity = self.getAuthorsActivity()
 
@@ -69,32 +72,37 @@ class Statistics:
 
         name = "Activity according to time"
         plt.ylabel(name)
-        plt.savefig(name + '.pdf')
-        print("More Info: " + name + '.pdf')
-        print()
+        plt.savefig("1.png")
+        pdf.write_text(name)
+        pdf.write_endlines(2)
+        pdf.write_image('1.png')
+        pdf.write_separator()
 
     def percent(self, p, t):
         return round((float(p) / float(t)) * 100, 2)
 
-    def show_authors_activity(self):
+    def show_authors_activity(self, pdf):
         authorsActivity = self.getAuthorsActivity()
         total = 0
         for messages, author in authorsActivity:
             total += messages
 
-        print("Authors activity")
+        pdf.write_text("Authors activity")
         for messages, author in authorsActivity:
-            print("Author: " + author + ", messages: " + str(messages) + ", percent: " + str(self.percent(messages, total)) + "%")
-        print()
+            pdf.write_text("Author: " + author + ", messages: " + str(messages) + ", percent: " + str(self.percent(messages, total)) + "%")
+
+        pdf.write_separator()
 
 class Summary(Statistics):
 
     def __init__(self, data):
         Statistics.__init__(self, data)
+        self.pdf = PDF()
 
     def run(self):
-        self.show_authors_activity()
-        self.draw_pie_sentiment()
-        self.draw_pie_sentiment('Negative', 0.8)
-        self.draw_pie_sentiment('Neutral')
-        self.show_activity_by_hour()
+        self.show_authors_activity(self.pdf)
+        self.draw_pie_sentiment(self.pdf)
+        self.draw_pie_sentiment(self.pdf, 'Negative', 0.8)
+        self.draw_pie_sentiment(self.pdf, 'Neutral')
+        self.show_activity_by_hour(self.pdf)
+        self.pdf.print_pdf()
