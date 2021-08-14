@@ -4,3 +4,4 @@ numpy==1.21.1
 nltk==3.6.2
 fpdf==1.7.2
 prettytable==2.1.0
+python-dotenv==0.19.0
