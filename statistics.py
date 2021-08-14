@@ -5,6 +5,7 @@ from datetime import datetime
 from pdf import PDF
 from prettytable import PrettyTable
 import os
+from spam.spam_detection import SpamDetection
 
 class Statistics:
 
@@ -116,6 +117,14 @@ class Statistics:
         pdf.write_text(t.get_string())
         pdf.write_separator()
 
+    def clasify_spam_or_ham(self, pdf):
+        spam_d = SpamDetection()
+        spam_d.train_model()
+        data = self.data.copy()
+        data['Message'] = data['Message'].astype(str)
+        data['spam'] = data['Message'].apply(spam_d.predict_text)
+        print(data)
+
 class Summary(Statistics):
 
     def __init__(self, data):
@@ -142,4 +151,5 @@ class Summary(Statistics):
         self.draw_pie_sentiment(self.pdf, 'Negative', 0.8)
         self.draw_pie_sentiment(self.pdf, 'Neutral')
         self.show_activity_by_hour(self.pdf)
+        self.clasify_spam_or_ham(self.pdf)
         self.pdf.print_pdf()
