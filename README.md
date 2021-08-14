@@ -13,3 +13,5 @@ $ python3 main.py
 - numpy
 - nltk
 - matplotlib
+- fpdf
+- prettytable
