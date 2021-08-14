@@ -16,3 +16,8 @@ pip3 install -r requirements.txt
 ```bash
 python3 main.py
 ```
+
+## Run tests
+```bash
+pytest
+```
