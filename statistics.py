@@ -122,7 +122,21 @@ class Summary(Statistics):
         Statistics.__init__(self, data)
         self.pdf = PDF()
 
+    def show_sliced_names(self):
+        data = self.data
+        new_data = data[data['Author'] != data['Real Name']]
+        new_data = new_data.drop_duplicates(subset='Author', keep="last")
+        results = []
+        for index, row in new_data.iterrows():
+            results.append([row['Author'], row['Real Name']])
+        if(len(results)):
+            self.pdf.write_text("Somes names was sliced")
+            for author, real_name in results:
+                self.pdf.write_text(author + "  ->  " + real_name)
+            self.pdf.write_separator()
+
     def run(self):
+        self.show_sliced_names()
         self.show_authors_activity(self.pdf)
         self.draw_pie_sentiment(self.pdf)
         self.draw_pie_sentiment(self.pdf, 'Negative', 0.8)

@@ -9,11 +9,20 @@ class ParseConversation:
     def __init__(self, filename = "_chat.txt"):
         self.filename = filename
 
+    def format_long_names(self, s):
+        if(len(s) <= 15):
+            return s
+        else: # the tag (E) means the name was sliced
+            return s[:15] + '(E)'
+
     def convert_to_df(self, data):
         df = pd.DataFrame(data, columns=["Date", 'Time', 'Author', 'Message'])
         df['Date'] = pd.to_datetime(df['Date'])
 
         data = df.dropna()
+
+        data['Real Name'] = data['Author']
+        data['Author'] = [self.format_long_names(name) for name in data['Author']]
 
         sentiments = SentimentIntensityAnalyzer()
         data["Positive"] = [sentiments.polarity_scores(i)["pos"] for i in data["Message"]]
