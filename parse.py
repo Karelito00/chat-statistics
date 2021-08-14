@@ -88,12 +88,12 @@ class Telegram(ParseConversation):
         json_file = json.load(f)
         messages = json_file['messages']
         for _message in messages:
-            if(_message['type'] == 'service'):
-                continue
-            author = _message['from']
-            message = _message['text']
-            date, time = _message['date'].split('T')
-            data.append([date, time, author, str(message)])
+            if(_message['type'] == 'message'):
+                author = _message['from']
+                message = _message['text']
+                date, time = _message['date'].split('T')
+                if(type(message) == str and len(message) > 0 and author != None):
+                    data.append([date, time, author, str(message)])
 
         f.close()
 
