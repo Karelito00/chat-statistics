@@ -82,6 +82,12 @@ class Telegram(ParseConversation):
     def __init__(self, filename):
         ParseConversation.__init__(self, filename)
 
+    def review(self, s):
+        for c in s:
+            if(ord(c) < 0 or ord(c) > 255):
+                return False
+        return True
+
     def prepare_data(self):
         data = []
         f = open(self.filename, encoding="utf-8")
@@ -92,7 +98,7 @@ class Telegram(ParseConversation):
                 author = _message['from']
                 message = _message['text']
                 date, time = _message['date'].split('T')
-                if(type(message) == str and len(message) > 0 and author != None):
+                if(type(message) == str and len(message) > 0 and author != None and self.review(message) and self.review(author)):
                     data.append([date, time, author, str(message)])
 
         f.close()
