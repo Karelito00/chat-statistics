@@ -3,15 +3,16 @@ Program for show statistics about exported chats(groups or private) with support
 - WhatsApp
 - Telegram
 
-## Run
-``` shell
-$ python3 main.py
+## Install
+
+### virtualenv
+```bash
+python3 -m virtualenv
+source ./venv/bin/activate
+pip3 install -r requirements.txt
 ```
 
-## Dependencies
-- pandas
-- numpy
-- nltk
-- matplotlib
-- fpdf
-- prettytable
+## Run
+```bash
+python3 main.py
+```
