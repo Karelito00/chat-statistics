@@ -1,4 +1,5 @@
 import fpdf
+import os
 
 SEPARATOR = '---------------------------------------------------------------------------'
 
@@ -27,4 +28,10 @@ class PDF:
         self.write_endlines(4)
 
     def print_pdf(self):
-        self.pdf.output('summary.pdf')
+        if not os.path.exists('./results'):
+            os.makedirs('./results')
+
+        if os.path.exists('./results/summary.pdf'):
+            os.remove('./results/summary.pdf')
+
+        self.pdf.output('results/summary.pdf')
