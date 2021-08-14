@@ -2,6 +2,7 @@ import pandas as pd
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import json
 from datetime import datetime
+import emoji
 
 class ParseConversation:
 
@@ -83,10 +84,17 @@ class Telegram(ParseConversation):
         ParseConversation.__init__(self, filename)
 
     def review(self, s):
+        if(s == None or type(s) != str or len(s) == 0):
+            return False
         for c in s:
             if(ord(c) < 0 or ord(c) > 255):
                 return False
         return True
+
+    def demojize(self, s):
+        if(s == None or type(s) != str or len(s) == 0):
+            return None
+        return emoji.demojize(s, language="es")
 
     def prepare_data(self):
         data = []
@@ -95,10 +103,10 @@ class Telegram(ParseConversation):
         messages = json_file['messages']
         for _message in messages:
             if(_message['type'] == 'message'):
-                author = _message['from']
+                author = self.demojize(_message['from'])
                 message = _message['text']
                 date, time = _message['date'].split('T')
-                if(type(message) == str and len(message) > 0 and author != None and self.review(message) and self.review(author)):
+                if(self.review(message) and self.review(author)):
                     data.append([date, time, author, str(message)])
 
         f.close()
