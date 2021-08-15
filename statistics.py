@@ -6,6 +6,7 @@ from pdf import PDF
 from prettytable import PrettyTable
 import os
 from spam.spam_detection import SpamDetection
+from core.lang_recognition import Tokenizer, Recognizer
 
 class Statistics:
 
@@ -136,6 +137,27 @@ class Statistics:
         figure = plt.gcf()
         figure.set_size_inches(10, 8)
         plt.savefig(name + ".png")
+
+    def recognize_func(self, text):
+        tokens = Tokenizer().tokenize(text)
+        return Recognizer().recognize(tokens).best_lang
+
+    def recognize_language(self, pdf):
+        data = self.data.copy()
+        data['language'] = data['Message'].apply(self.recognize_func)
+        data = data[['language', 'Message']]
+        data['Message'] = 1
+        data = data.groupby(data['language']).sum()
+        data = data.sort_values(by='Message', ascending=False).head()
+
+        name = "Language frecuency"
+
+        plt.bar(data.index, data['Message'], align='center')
+        plt.xlabel('Language')
+        plt.ylabel('Frequency')
+        figure = plt.gcf()
+        figure.set_size_inches(10, 8)
+        plt.savefig(name + ".png",)
         pdf.write_text(name)
         pdf.write_endlines(2)
         pdf.write_image(name + '.png', w=200)
@@ -163,6 +185,7 @@ class Summary(Statistics):
             self.pdf.write_separator()
 
     def run(self):
+        self.recognize_language(self.pdf)
         self.show_sliced_names()
         self.show_authors_activity(self.pdf)
         self.draw_pie_sentiment(self.pdf)
