@@ -122,8 +122,26 @@ class Statistics:
         spam_d.train_model()
         data = self.data.copy()
         data['Message'] = data['Message'].astype(str)
-        data['spam'] = data['Message'].apply(spam_d.predict_text)
-        print(data)
+        data['Spam'] = data['Message'].apply(spam_d.predict_text)
+        data = data[['Author', 'Spam']]
+
+        data = data.groupby(data['Author']).sum()
+        data = data.sort_values(by="Spam", ascending=False).head()
+
+        name = "Spam frecuency by Author"
+
+        plt.bar(data.index, data['Spam'], align='center')
+        plt.xlabel('Author')
+        plt.ylabel('Spam frequency')
+        figure = plt.gcf()
+        figure.set_size_inches(10, 8)
+        plt.savefig(name + ".png")
+        pdf.write_text(name)
+        pdf.write_endlines(2)
+        pdf.write_image(name + '.png', w=200)
+        os.remove(name + '.png')
+        pdf.write_separator()
+
 
 class Summary(Statistics):
 
