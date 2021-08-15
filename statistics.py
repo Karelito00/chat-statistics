@@ -6,7 +6,7 @@ from pdf import PDF
 from prettytable import PrettyTable
 import os
 from spam.spam_detection import SpamDetection
-from core.lang_recognition import Tokenizer, Recognizer
+from core.lang_recognition import recognize
 
 class Statistics:
 
@@ -139,8 +139,7 @@ class Statistics:
         plt.savefig(name + ".png")
 
     def recognize_func(self, text):
-        tokens = Tokenizer().tokenize(text)
-        return Recognizer().recognize(tokens).best_lang
+        return recognize(text).best_lang
 
     def recognize_language(self, pdf):
         data = self.data.copy()
@@ -156,7 +155,7 @@ class Statistics:
         plt.xlabel('Language')
         plt.ylabel('Frequency')
         figure = plt.gcf()
-        figure.set_size_inches(10, 8)
+        figure.set_size_inches(11, 8)
         plt.savefig(name + ".png",)
         pdf.write_text(name)
         pdf.write_endlines(2)
