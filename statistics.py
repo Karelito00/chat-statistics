@@ -193,7 +193,6 @@ class Summary(Statistics):
             self.pdf.write_separator()
 
     def run(self):
-        self.recognize_language(self.pdf)
         self.show_sliced_names()
         self.show_authors_activity(self.pdf)
         self.draw_pie_sentiment(self.pdf)
@@ -201,4 +200,5 @@ class Summary(Statistics):
         self.draw_pie_sentiment(self.pdf, 'Neutral')
         self.show_activity_by_hour(self.pdf)
         self.clasify_spam_or_ham(self.pdf)
+        self.recognize_language(self.pdf)
         self.pdf.print_pdf()
