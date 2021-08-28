@@ -123,7 +123,7 @@ class Statistics:
         spam_d.train_model()
         data = self.data.copy()
         data['Message'] = data['Message'].astype(str)
-        data['Spam'] = data['Message'].apply(spam_d.predict_text)
+        data['Spam'] = spam_d.predict_array(data['Message'])
         data = data[['Author', 'Spam']]
 
         data = data.groupby(data['Author']).sum()
@@ -137,6 +137,11 @@ class Statistics:
         figure = plt.gcf()
         figure.set_size_inches(10, 8)
         plt.savefig(name + ".png")
+        pdf.write_text(name)
+        pdf.write_endlines(2)
+        pdf.write_image(name + '.png', w=200)
+        os.remove(name + '.png')
+        pdf.write_separator()
 
     def recognize_func(self, text):
         return recognize(text).best_lang

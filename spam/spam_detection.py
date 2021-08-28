@@ -91,3 +91,9 @@ class SpamDetection:
         tfidf = self.tfidf_transformer.transform(bag_of_words_for_message)
         return self.model.predict((tfidf)[0][0])
 
+    def predict_array(self, text_array):
+        bag_of_words_for_message = self.bag_of_words_transformer.transform(text_array)
+        tfidf = self.tfidf_transformer.transform(bag_of_words_for_message)
+        return self.model.predict(tfidf)
+
+
