@@ -34,7 +34,7 @@ class Statistics:
         return authorsActivity[::-1]
 
     def draw_pie_sentiment(self, pdf, column="Positive", ALPHA=0.6):
-        data = self.data
+        data = self.data.copy()
         data[column] = [1 if x > ALPHA else 0 for x in data[column]]
         data[column] = data[column].astype(int)
 
@@ -54,6 +54,8 @@ class Statistics:
 
         name = "Top " + str(len(index)) + " chat authors more " + column
         plt.title(name, fontsize=20)
+        figure = plt.gcf()
+        figure.set_size_inches(11, 8)
         plt.savefig(name + '.png')
         plt.close()
         pdf.write_text(name)
@@ -79,7 +81,7 @@ class Statistics:
         return num
 
     def show_activity_by_hour(self, pdf):
-        data = self.data
+        data = self.data.copy()
         authorsActivity = self.getAuthorsActivity()
 
         authorsActivity = authorsActivity[:min(len(authorsActivity), 5)]
@@ -94,6 +96,8 @@ class Statistics:
 
         name = "Activity according to time"
         plt.ylabel(name)
+        figure = plt.gcf()
+        figure.set_size_inches(11, 8)
         plt.savefig(name + ".png")
         plt.close()
         pdf.write_text(name)
@@ -163,7 +167,7 @@ class Statistics:
         plt.xlabel('Language')
         plt.ylabel('Frequency')
         figure = plt.gcf()
-        figure.set_size_inches(11, 8)
+        figure.set_size_inches(11, 9)
         plt.savefig(name + ".png",)
         plt.close()
         pdf.write_text(name)
