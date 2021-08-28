@@ -55,6 +55,7 @@ class Statistics:
         name = "Top " + str(len(index)) + " chat authors more " + column
         plt.title(name, fontsize=20)
         plt.savefig(name + '.png')
+        plt.close()
         pdf.write_text(name)
         pdf.write_image(name + '.png')
         os.remove(name + '.png')
@@ -94,6 +95,7 @@ class Statistics:
         name = "Activity according to time"
         plt.ylabel(name)
         plt.savefig(name + ".png")
+        plt.close()
         pdf.write_text(name)
         pdf.write_endlines(2)
         pdf.write_image(name + '.png', w=200)
@@ -137,6 +139,7 @@ class Statistics:
         figure = plt.gcf()
         figure.set_size_inches(10, 8)
         plt.savefig(name + ".png")
+        plt.close()
         pdf.write_text(name)
         pdf.write_endlines(2)
         pdf.write_image(name + '.png', w=200)
@@ -162,6 +165,7 @@ class Statistics:
         figure = plt.gcf()
         figure.set_size_inches(11, 8)
         plt.savefig(name + ".png",)
+        plt.close()
         pdf.write_text(name)
         pdf.write_endlines(2)
         pdf.write_image(name + '.png', w=200)
