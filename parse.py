@@ -20,11 +20,11 @@ class ParseConversation:
         df = pd.DataFrame(data, columns=["Date", 'Time', 'Author', 'Message'])
         data = df.dropna()
 
-        df['Message_Summary'] = text_summarization(data["Message"])
         df['Date'] = pd.to_datetime(df['Date'])
 
         data['Real Name'] = data['Author']
         data['Author'] = [self.format_long_names(name) for name in data['Author']]
+        data['Message_Summary'] = text_summarization(data["Message"])
 
         sentiments = SentimentIntensityAnalyzer()
         data["Positive"] = [sentiments.polarity_scores(i)["pos"] for i in data["Message"]]

@@ -128,8 +128,8 @@ class Statistics:
         spam_d = SpamDetection()
         spam_d.train_model()
         data = self.data.copy()
-        data['Message'] = data['Message'].astype(str)
-        data['Spam'] = spam_d.predict_array(data['Message'])
+        data['Message_Summary'] = data['Message_Summary'].astype(str)
+        data['Spam'] = spam_d.predict_array(data['Message_Summary'])
         data = data[['Author', 'Spam']]
 
         data = data.groupby(data['Author']).sum()

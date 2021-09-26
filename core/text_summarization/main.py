@@ -60,4 +60,4 @@ class Text_Summarization:
         new_messages = self.remove_stopwords(new_messages)
         new_messages = self.remove_numbers(new_messages)
         new_messages = self.calculate_normalized_frequency(new_messages)
-        return new_messages
+        return [message.lower() for message in new_messages]
