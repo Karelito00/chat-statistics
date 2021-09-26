@@ -3,6 +3,7 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import json
 from datetime import datetime
 import emoji
+from core.text_summarization import text_summarization
 
 class ParseConversation:
 
@@ -17,9 +18,10 @@ class ParseConversation:
 
     def convert_to_df(self, data):
         df = pd.DataFrame(data, columns=["Date", 'Time', 'Author', 'Message'])
-        df['Date'] = pd.to_datetime(df['Date'])
-
         data = df.dropna()
+
+        df['Message_Summary'] = text_summarization(data["Message"])
+        df['Date'] = pd.to_datetime(df['Date'])
 
         data['Real Name'] = data['Author']
         data['Author'] = [self.format_long_names(name) for name in data['Author']]
